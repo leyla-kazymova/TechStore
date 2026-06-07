@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест бэкенда</title>
+</head>
+<body>
+    <h1>Тест бэкенда интернет-магазина</h1>
+
+    <h2>1. Регистрация</h2>
+    <button onclick="registerUser()">Зарегистрировать пользователя</button>
+
+    <h2>2. Вход пользователя</h2>
+    <button onclick="loginUser()">Войти как пользователь</button>
+
+    <h2>3. Проверить текущего пользователя</h2>
+    <button onclick="checkMe()">Кто я?</button>
+
+    <h2>4. Добавить товар в корзину</h2>
+    <button onclick="addToCart()">Добавить iPhone 15 в корзину</button>
+
+    <h2>5. Посмотреть корзину</h2>
+    <button onclick="showCart()">Показать корзину</button>
+
+    <h2>6. Оформить заказ</h2>
+    <button onclick="checkout()">Купить</button>
+
+    <h2>7. Мои заказы</h2>
+    <button onclick="myOrders()">Показать мои заказы</button>
+
+    <h2>8. Вход админа</h2>
+    <button onclick="loginAdmin()">Войти как админ</button>
+
+    <h2>9. Все заказы для админа</h2>
+    <button onclick="adminOrders()">Показать все заказы</button>
+
+    <h2>10. Изменить статус заказа</h2>
+    <button onclick="changeStatus()">Изменить статус заказа №1</button>
+
+    <h2>11. Добавить категорию</h2>
+    <button onclick="createCategory()">Добавить категорию «Планшеты»</button>
+
+    <h2>12. Изменить категорию</h2>
+    <p>Сначала добавь категорию, потом посмотри её id в списке категорий.</p>
+    <input type="number" id="categoryId" placeholder="id категории">
+    <button onclick="updateCategory()">Изменить категорию</button>
+
+    <h2>13. Удалить категорию</h2>
+    <input type="number" id="deleteCategoryId" placeholder="id категории">
+    <button onclick="deleteCategory()">Удалить категорию</button>
+
+    <h2>14. Добавить товар</h2>
+    <input type="file" id="productImage">
+    <br><br>
+    <button onclick="createProduct()">Добавить товар iPad</button>
+
+    <h2>15. Изменить товар</h2>
+    <p>Сначала добавь товар, потом посмотри его id в списке товаров.</p>
+    <input type="number" id="productId" placeholder="id товара">
+    <button onclick="updateProduct()">Изменить товар</button>
+
+    <h2>16. Удалить товар</h2>
+    <input type="number" id="deleteProductId" placeholder="id товара">
+    <button onclick="deleteProduct()">Удалить товар</button>
+
+    <h2>17. Список категорий</h2>
+    <button onclick="showCategories()">Показать категории</button>
+
+    <h2>18. Список товаров</h2>
+    <button onclick="showProducts()">Показать товары</button>
+
+    <h2>Результат:</h2>
+    <pre id="result"></pre>
+
+    <script>
+        const result = document.getElementById("result");
+
+        function show(data) {
+            result.textContent = JSON.stringify(data, null, 2);
+        }
+
+        function registerUser() {
+            fetch("/api/auth/register.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: "Лейла",
+                    email: "leyla@mail.ru",
+                    password: "123456"
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function loginUser() {
+            fetch("/api/auth/login.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: "leyla@mail.ru",
+                    password: "123456"
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function checkMe() {
+            fetch("/api/auth/me.php")
+                .then(res => res.json())
+                .then(data => show(data));
+        }
+
+        function addToCart() {
+            fetch("/api/cart/add.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    product_id: 1,
+                    quantity: 1
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function showCart() {
+            fetch("/api/cart/list.php")
+                .then(res => res.json())
+                .then(data => show(data));
+        }
+
+        function checkout() {
+            fetch("/api/cart/checkout.php", {
+                method: "POST"
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function myOrders() {
+            fetch("/api/orders/my.php")
+                .then(res => res.json())
+                .then(data => show(data));
+        }
+
+        function loginAdmin() {
+            fetch("/api/auth/login.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: "admin@mail.ru",
+                    password: "admin123"
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function adminOrders() {
+            fetch("/api/orders/admin_list.php")
+                .then(res => res.json())
+                .then(data => show(data));
+        }
+
+        function changeStatus() {
+            fetch("/api/orders/update_status.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    order_id: 1,
+                    status: "В обработке"
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function createCategory() {
+            fetch("/api/categories/create.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: "Планшеты"
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function updateCategory() {
+            const id = document.getElementById("categoryId").value;
+
+            if (!id) {
+                show({
+                    success: false,
+                    message: "Сначала введи id категории"
+                });
+                return;
+            }
+
+            fetch("/api/categories/update.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: id,
+                    name: "Планшеты и электронные книги"
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function deleteCategory() {
+            const id = document.getElementById("deleteCategoryId").value;
+
+            if (!id) {
+                show({
+                    success: false,
+                    message: "Сначала введи id категории"
+                });
+                return;
+            }
+
+            fetch("/api/categories/delete.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function createProduct() {
+            const formData = new FormData();
+
+            formData.append("category_id", 1);
+            formData.append("name", "iPad 10");
+            formData.append("description", "Планшет Apple iPad 10 поколения");
+            formData.append("price", 49990);
+            formData.append("quantity", 7);
+
+            const imageInput = document.getElementById("productImage");
+
+            if (imageInput.files.length > 0) {
+                formData.append("image", imageInput.files[0]);
+            }
+
+            fetch("/api/products/create.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function updateProduct() {
+            const id = document.getElementById("productId").value;
+
+            if (!id) {
+                show({
+                    success: false,
+                    message: "Сначала введи id товара"
+                });
+                return;
+            }
+
+            const formData = new FormData();
+
+            formData.append("id", id);
+            formData.append("category_id", 1);
+            formData.append("name", "iPad 10 Updated");
+            formData.append("description", "Обновлённое описание товара iPad 10");
+            formData.append("price", 45990);
+            formData.append("quantity", 10);
+
+            fetch("/api/products/update.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function deleteProduct() {
+            const id = document.getElementById("deleteProductId").value;
+
+            if (!id) {
+                show({
+                    success: false,
+                    message: "Сначала введи id товара"
+                });
+                return;
+            }
+
+            fetch("/api/products/delete.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            })
+            .then(res => res.json())
+            .then(data => show(data));
+        }
+
+        function showCategories() {
+            fetch("/api/categories/list.php")
+                .then(res => res.json())
+                .then(data => show(data));
+        }
+
+        function showProducts() {
+            fetch("/api/products/list.php")
+                .then(res => res.json())
+                .then(data => show(data));
+        }
+    </script>
+</body>
+</html>
