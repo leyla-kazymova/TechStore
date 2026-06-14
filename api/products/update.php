@@ -9,6 +9,15 @@ $name = trim($_POST["name"] ?? "");
 $description = trim($_POST["description"] ?? "");
 $price = $_POST["price"] ?? null;
 $quantity = $_POST["quantity"] ?? 0;
+$price = floatval($_POST["price"] ?? 0);
+$quantity = intval($_POST["quantity"] ?? 0);
+
+if ($price <= 0) {
+    response(false, "Некорректная цена");
+}
+if ($quantity < 0) {
+    response(false, "Некорректное количество");
+}
 
 if (!$id || !$categoryId || $name === "" || !$price) {
     response(false, "Заполните обязательные поля");

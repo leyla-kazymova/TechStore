@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина — TechStore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <header class="header" id="header">
+        <div class="header__inner">
+            <a href="index.html" class="header__logo">
+                <span class="logo-icon">⬡</span>
+                <span class="logo-text">Tech<strong>Store</strong></span>
+            </a>
+            <nav class="header__nav">
+                <a href="index.html" class="nav-link">Каталог</a>
+                <a href="cart.html" class="nav-link nav-link--active">Корзина</a>
+                <a href="orders.html" class="nav-link" id="nav-orders" style="display:none">Мои заказы</a>
+            </nav>
+            <div class="header__actions">
+                <button class="btn btn--outline" id="btn-login" onclick="openModal()">Войти</button>
+                <div class="user-block" id="user-block" style="display:none">
+                    <span class="user-name" id="user-name"></span>
+                    <a href="admin.html" class="btn btn--admin" id="btn-admin" style="display:none">Админ</a>
+                    <button class="btn btn--ghost" onclick="logout()">Выйти</button>
+                </div>
+            </div>
+            <button class="burger" id="burger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="index.html" class="mobile-nav-link">Каталог</a>
+            <a href="cart.html" class="mobile-nav-link">Корзина</a>
+            <a href="orders.html" class="mobile-nav-link" id="mobile-nav-orders" style="display:none">Мои заказы</a>
+            <a href="admin.html" class="mobile-nav-link" id="mobile-nav-admin" style="display:none">Панель администратора</a>
+            <button class="btn btn--outline mobile-login-btn" id="mobile-btn-login" onclick="openModal()">Войти</button>
+            <div class="mobile-user-block" id="mobile-user-block" style="display:none">
+                <span class="user-name" id="mobile-user-name"></span>
+                <button class="btn btn--ghost" onclick="logout()">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== КОРЗИНА ===== -->
+    <main class="cart-section">
+        <div class="container">
+
+            <h1 class="section-title" style="margin-bottom: 28px">Корзина</h1>
+
+            <!-- Гость — не авторизован -->
+            <div class="cart-guest" id="cart-guest" style="display:none">
+                <p class="cart-guest__icon">🔒</p>
+                <h2>Войдите чтобы увидеть корзину</h2>
+                <p>Корзина доступна только авторизованным пользователям</p>
+                <button class="btn btn--primary" onclick="openModal()" style="margin-top:20px">
+                    Войти
+                </button>
+            </div>
+
+            <!-- Скелетон -->
+            <div class="cart-skeleton" id="cart-skeleton" style="display:none">
+                <div class="cart-skeleton__items">
+                    <div class="cart-skeleton__row"></div>
+                    <div class="cart-skeleton__row"></div>
+                    <div class="cart-skeleton__row"></div>
+                </div>
+                <div class="cart-skeleton__summary"></div>
+            </div>
+
+            <!-- Корзина пуста -->
+            <div class="cart-empty" id="cart-empty" style="display:none">
+                <p class="cart-empty__icon">🛒</p>
+                <h2>Корзина пуста</h2>
+                <p>Добавьте товары из каталога</p>
+                <a href="index.html" class="btn btn--primary" style="margin-top:20px">
+                    Перейти в каталог
+                </a>
+            </div>
+
+            <!-- Содержимое корзины -->
+            <div class="cart-layout" id="cart-layout" style="display:none">
+
+                <!-- Список товаров -->
+                <div class="cart-items" id="cart-items">
+                    <!-- JS вставит строки товаров -->
+                </div>
+
+                <!-- Итого -->
+                <div class="cart-summary">
+                    <h2 class="cart-summary__title">Итого</h2>
+
+                    <div class="cart-summary__row">
+                        <span>Товаров</span>
+                        <span id="summary-count"></span>
+                    </div>
+                    <div class="cart-summary__row cart-summary__row--total">
+                        <span>Сумма</span>
+                        <span id="summary-price"></span>
+                    </div>
+
+                    <button
+                        class="btn btn--primary btn--full"
+                        id="btn-checkout"
+                        onclick="checkout()"
+                        style="margin-top: 20px"
+                    >
+                        Оформить заказ
+                    </button>
+
+                    <a href="index.html" class="btn btn--ghost btn--full" style="margin-top: 8px">
+                        Продолжить покупки
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ===== ФУТЕР ===== -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <a href="index.html" class="header__logo">
+                <span class="logo-icon">⬡</span>
+                <span class="logo-text">Tech<strong>Store</strong></span>
+            </a>
+            <p class="footer__copy">© 2025 TechStore. Все права защищены.</p>
+            <nav class="footer__nav">
+                <a href="index.html" class="footer__link">Главная</a>
+                <a href="orders.html" class="footer__link">Доставка</a>
+                <a href="cart.html" class="footer__link">Корзина</a>
+            </nav>
+        </div>
+    </footer>
+
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+    <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+        <div class="modal" id="modal">
+            <button class="modal__close" onclick="closeModal()">×</button>
+            <div class="modal__tabs">
+                <button class="modal__tab modal__tab--active" id="tab-login" onclick="switchTab('login')">Войти</button>
+                <button class="modal__tab" id="tab-register" onclick="switchTab('register')">Регистрация</button>
+            </div>
+            <div class="modal__message" id="modal-message" style="display:none"></div>
+            <form class="modal__form" id="form-login" onsubmit="submitLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-input" type="email" id="login-email" placeholder="example@mail.ru" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input class="form-input" type="password" id="login-password" placeholder="Введите пароль" required>
+                </div>
+                <button class="btn btn--primary btn--full" type="submit" id="login-submit"><span>Войти</span></button>
+                <p class="modal__switch">Нет аккаунта? <button type="button" class="link-btn" onclick="switchTab('register')">Зарегистрируйтесь</button></p>
+            </form>
+            <form class="modal__form" id="form-register" style="display:none" onsubmit="submitRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Имя</label>
+                    <input class="form-input" type="text" id="reg-name" placeholder="Ваше имя" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-input" type="email" id="reg-email" placeholder="example@mail.ru" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input class="form-input" type="password" id="reg-password" placeholder="Минимум 6 символов" required minlength="6">
+                </div>
+                <button class="btn btn--primary btn--full" type="submit" id="register-submit"><span>Зарегистрироваться</span></button>
+                <p class="modal__switch">Уже есть аккаунт? <button type="button" class="link-btn" onclick="switchTab('login')">Войти</button></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ===== СКРИПТЫ ===== -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+
+</body>
+</html>

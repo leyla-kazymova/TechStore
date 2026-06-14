@@ -1,0 +1,129 @@
+/* =============================================
+   TECHSTORE — ORDERS.CSS
+   ============================================= */
+
+.orders-section {
+    margin-top: var(--header-h);
+    padding: 40px 0 80px;
+}
+
+/* ГОСТЬ */
+.orders-guest { text-align: center; padding: 80px 20px; color: var(--color-muted); }
+.orders-guest__icon { font-size: 48px; margin-bottom: 16px; }
+.orders-guest h2 { font-size: 1.3rem; color: var(--color-text); margin-bottom: 8px; }
+
+/* СКЕЛЕТОН */
+.orders-skeleton { display: flex; flex-direction: column; gap: 12px; }
+.orders-skeleton__card {
+    height: 120px;
+    border-radius: var(--radius);
+    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.2s infinite;
+}
+
+/* НЕТ ЗАКАЗОВ */
+.orders-empty { text-align: center; padding: 80px 20px; color: var(--color-muted); }
+.orders-empty__icon { font-size: 48px; margin-bottom: 16px; }
+.orders-empty h2 { font-size: 1.3rem; color: var(--color-text); margin-bottom: 8px; }
+
+/* СПИСОК */
+.orders-list { display: flex; flex-direction: column; gap: 12px; }
+
+/* КАРТОЧКА ЗАКАЗА */
+.order-card {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.order-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    cursor: pointer;
+    gap: 12px;
+    flex-wrap: wrap;
+    transition: background 0.15s;
+}
+.order-card__head:hover { background: var(--color-bg); }
+
+.order-card__left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.order-card__num  { font-size: 15px; font-weight: 700; color: var(--color-text); }
+.order-card__date { font-size: 13px; color: var(--color-muted); }
+
+.order-card__right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.order-card__price { font-size: 16px; font-weight: 700; color: var(--color-text); }
+
+.order-card__arrow {
+    font-size: 12px;
+    color: var(--color-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+.order-card.open .order-card__arrow { transform: rotate(180deg); }
+
+/* ТЕЛО */
+.order-card__body {
+    display: none;
+    border-top: 1px solid var(--color-border);
+    padding: 16px 20px;
+}
+.order-card.open .order-card__body { display: block; }
+
+.order-card__items-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+}
+
+/* СТРОКА ТОВАРА */
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border);
+    gap: 12px;
+}
+.order-item:last-child { border-bottom: none; }
+.order-item__name  { font-size: 14px; color: var(--color-text); flex: 1; }
+.order-item__qty   { font-size: 13px; color: var(--color-muted); white-space: nowrap; }
+.order-item__price { font-size: 14px; font-weight: 600; color: var(--color-text); white-space: nowrap; }
+
+/* ИТОГО */
+.order-card__total {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+@media (max-width: 600px) {
+    .order-card__head  { padding: 12px 14px; }
+    .order-card__body  { padding: 12px 14px; }
+    .order-card__left  { gap: 8px; }
+    .order-card__right { gap: 10px; }
+    .order-card__price { font-size: 14px; }
+}

@@ -1,0 +1,247 @@
+
+.cart-section {
+    margin-top: var(--header-h);
+    padding: 40px 0 80px;
+}
+
+/* ГОСТЬ */
+.cart-guest {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--color-muted);
+}
+.cart-guest__icon { font-size: 48px; margin-bottom: 16px; }
+.cart-guest h2    { font-size: 1.3rem; color: var(--color-text); margin-bottom: 8px; }
+
+/* СКЕЛЕТОН */
+.cart-skeleton {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.cart-skeleton__items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cart-skeleton__row {
+    height: 100px;
+    border-radius: var(--radius);
+    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.2s infinite;
+}
+
+.cart-skeleton__summary {
+    height: 220px;
+    border-radius: var(--radius);
+    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.2s infinite;
+}
+
+/* ПУСТАЯ КОРЗИНА */
+.cart-empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--color-muted);
+}
+.cart-empty__icon { font-size: 48px; margin-bottom: 16px; }
+.cart-empty h2    { font-size: 1.3rem; color: var(--color-text); margin-bottom: 8px; }
+
+/* РАСКЛАДКА */
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* СПИСОК ТОВАРОВ */
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Строка товара */
+.cart-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 14px;
+}
+
+.cart-item__img {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-bg);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cart-item__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.cart-item__img .no-img {
+    font-size: 28px;
+    color: #ccc;
+}
+
+.cart-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.cart-item__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cart-item__name:hover { color: var(--color-primary); }
+
+.cart-item__price-unit {
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+.cart-item__total {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-top: 4px;
+}
+
+.cart-item__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Счётчик количества в корзине */
+.cart-qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+}
+
+.cart-qty__btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    color: var(--color-muted);
+    background: #fff;
+    transition: background 0.15s;
+}
+.cart-qty__btn:hover { background: var(--color-bg); }
+
+.cart-qty__val {
+    width: 36px;
+    height: 32px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    font-size: 14px;
+    font-weight: 600;
+    background: #fff;
+    outline: none;
+    -moz-appearance: textfield;
+}
+.cart-qty__val::-webkit-outer-spin-button,
+.cart-qty__val::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.cart-item__remove {
+    font-size: 12px;
+    color: var(--color-danger);
+    background: none;
+    padding: 0;
+    transition: opacity 0.15s;
+}
+.cart-item__remove:hover { opacity: 0.7; }
+
+/* ─── ИТОГО ─────────────────────────────────── */
+.cart-summary {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: sticky;
+    top: calc(var(--header-h) + 16px);
+}
+
+.cart-summary__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cart-summary__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--color-muted);
+    padding: 6px 0;
+}
+
+.cart-summary__row--total {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+    border-top: 1px solid var(--color-border);
+    margin-top: 8px;
+    padding-top: 12px;
+}
+
+/* ─── АДАПТИВ ───────────────────────────────── */
+@media (max-width: 768px) {
+    .cart-layout,
+    .cart-skeleton {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-summary {
+        position: static;
+    }
+
+    .cart-item {
+        grid-template-columns: 64px 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    .cart-item__img {
+        width: 64px;
+        height: 64px;
+        grid-row: span 2;
+    }
+
+    .cart-item__actions {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
