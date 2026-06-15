@@ -82,27 +82,27 @@ function renderHeader() {
 /* ─── СЧЁТЧИК КОРЗИНЫ ───────────────────────── */
 
 // Обновляет цифру на иконке корзины в шапке
-// async function updateCartCount() {
-//     const countEl = document.getElementById("cart-count");
-//     if (!countEl) return;
+async function updateCartCount() {
+    const countEl = document.getElementById("cart-count");
+    if (!countEl) return;
 
-//     if (!currentUser) {
-//         countEl.textContent = "0";
-//         countEl.classList.remove("visible");
-//         return;
-//     }
+    if (!currentUser) {
+        countEl.textContent = "0";
+        countEl.classList.remove("visible");
+        return;
+    }
 
-//     const res = await apiGet("/api/cart/list.php");
+    const res = await apiGet("/api/cart/list.php");
 
-//     if (res.success && res.data.items.length > 0) {
-//         const total = res.data.items.reduce((sum, item) => sum + item.quantity, 0);
-//         countEl.textContent = total;
-//         countEl.classList.add("visible");
-//     } else {
-//         countEl.textContent = "0";
-//         countEl.classList.remove("visible");
-//     }
-// }
+    if (res.success && res.data.items.length > 0) {
+        const total = res.data.items.reduce((sum, item) => sum + Number(item.quantity), 0);
+        countEl.textContent = total;
+        countEl.classList.add("visible");
+    } else {
+        countEl.textContent = "0";
+        countEl.classList.remove("visible");
+    }
+}
 
 /* ─── МОДАЛЬНОЕ ОКНО ────────────────────────── */
 

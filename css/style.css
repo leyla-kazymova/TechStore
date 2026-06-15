@@ -251,48 +251,189 @@ input, select, textarea { font-family: inherit; }
 
 /* ─── 6. HERO ────────────────────────────────── */
 .hero {
+    position: relative;
     margin-top: var(--header-h);
-    background: #fff;
-    border-bottom: 1px solid var(--color-border);
-    padding: 60px 20px;
+    padding: 90px 20px 100px;
     text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-border);
+
+    background:
+        radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.16), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.18), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(191, 219, 254, 0.45), transparent 32%),
+        linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+/* Тонкая технологичная сетка */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, transparent, black 20%, black 75%, transparent);
+    pointer-events: none;
+}
+
+/* Лёгкое сияние по центру */
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 560px;
+    height: 560px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.10), transparent 65%);
+    filter: blur(10px);
+    pointer-events: none;
 }
 
 .hero__inner {
-    max-width: 560px;
+    position: relative;
+    z-index: 2;
+    max-width: 620px;
     margin: 0 auto;
 }
 
 .hero__label {
     display: inline-block;
-    padding: 4px 12px;
-    background: #eff6ff;
+    padding: 6px 14px;
+    background: rgba(239, 246, 255, 0.9);
     border: 1px solid #bfdbfe;
-    border-radius: var(--radius);
+    border-radius: 999px;
     color: var(--color-primary);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
 }
 
 .hero__title {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
     font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 16px;
+    line-height: 1.05;
+    margin-bottom: 18px;
+    letter-spacing: -0.04em;
 }
 
-.hero__accent { color: var(--color-primary); }
+.hero__accent {
+    color: var(--color-primary);
+    background: linear-gradient(90deg, #2563eb, #60a5fa, #2563eb);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: heroTextShine 5s linear infinite;
+}
 
 .hero__sub {
     font-size: 16px;
     color: var(--color-muted);
-    margin-bottom: 28px;
+    margin-bottom: 30px;
 }
 
-.hero__decor { display: none; }
+/* Декоративные движущиеся круги */
+.hero__decor {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero__circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0.7;
+    animation: floatCircle 8s ease-in-out infinite;
+}
+
+.hero__circle--1 {
+    width: 170px;
+    height: 170px;
+    left: 12%;
+    top: 22%;
+    background: rgba(37, 99, 235, 0.12);
+}
+
+.hero__circle--2 {
+    width: 120px;
+    height: 120px;
+    right: 14%;
+    top: 18%;
+    background: rgba(96, 165, 250, 0.16);
+    animation-delay: 1.5s;
+}
+
+.hero__circle--3 {
+    width: 210px;
+    height: 210px;
+    right: 24%;
+    bottom: -70px;
+    background: rgba(191, 219, 254, 0.55);
+    animation-delay: 3s;
+}
+
+/* Маленькие технологичные точки */
+.hero__decor::before,
+.hero__decor::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0.35;
+    box-shadow:
+        40px 30px 0 rgba(37, 99, 235, 0.18),
+        90px -10px 0 rgba(37, 99, 235, 0.14),
+        130px 45px 0 rgba(37, 99, 235, 0.12);
+    animation: floatDots 9s ease-in-out infinite;
+}
+
+.hero__decor::before {
+    left: 18%;
+    bottom: 28%;
+}
+
+.hero__decor::after {
+    right: 22%;
+    top: 35%;
+    animation-delay: 2s;
+}
+
+@keyframes floatCircle {
+    0%, 100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+        transform: translate3d(18px, -18px, 0) scale(1.05);
+    }
+}
+
+@keyframes floatDots {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-18px);
+    }
+}
+
+@keyframes heroTextShine {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
 
 /* ─── 7. КАТАЛОГ ─────────────────────────────── */
 .catalog-section { padding: 40px 0 80px; }
@@ -633,8 +774,19 @@ input, select, textarea { font-family: inherit; }
     .header__logo { font-size: 16px; }
     .header__actions { gap: 6px; }
 
-    .hero { padding: 40px 14px 48px; }
-    .hero__title { font-size: 1.8rem; }
+   .hero {
+    padding: 56px 14px 64px;
+}
+
+.hero__title {
+    font-size: 2rem;
+}
+
+.hero__circle--1,
+.hero__circle--2,
+.hero__circle--3 {
+    opacity: 0.45;
+}
 
     .catalog-section { padding: 28px 0 60px; }
     .catalog-header { flex-direction: column; gap: 2px; }
@@ -655,4 +807,44 @@ input, select, textarea { font-family: inherit; }
 @media (max-width: 420px) {
     .products-grid { grid-template-columns: 1fr; }
     .hero__title { font-size: 1.6rem; }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 32px 0 20px;
+}
+
+.pagination__btn {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.pagination__btn:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.pagination__btn--active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
+.pagination__btn--active:hover {
+    color: #ffffff;
+}
+
+.pagination__btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }

@@ -12,7 +12,7 @@
  *   const res = await apiGet("/api/products/list.php?category_id=3");
  */
 
-const BASE = "/TechStore";
+const BASE = "";
 async function apiGet(url) {
     try {
         const response = await fetch(BASE + url, {

@@ -1,14 +1,22 @@
 /* =============================================
    TECHSTORE — CATALOG.JS
-   Категории, список товаров, добавление в корзину
+   Категории, список товаров, добавление в корзину, пагинация
    ============================================= */
 
 // Текущая активная категория (null = все товары)
 let activeCategoryId = null;
 
+// Все загруженные товары
+let allProducts = [];
+
+// Текущая страница пагинации
+let currentPage = 1;
+
+// Сколько товаров показывать на одной странице
+const PRODUCTS_PER_PAGE = 8;
+
 /* ─── ИНИЦИАЛИЗАЦИЯ ─────────────────────────── */
 
-// Запускается когда страница загрузилась
 document.addEventListener("DOMContentLoaded", function () {
     loadCategories();
     loadProducts();
@@ -22,68 +30,62 @@ async function loadCategories() {
     const container = document.getElementById("categories");
     if (!container) return;
 
-    // Убираем скелетоны
     container.innerHTML = "";
 
     if (!res.success || res.data.length === 0) return;
 
-    // Кнопка "Все" — показывает все товары без фильтра
     const allBtn = document.createElement("button");
-    allBtn.className   = "category-btn active";
+    allBtn.className = "category-btn active";
     allBtn.textContent = "Все";
-    allBtn.onclick     = () => filterByCategory(null, allBtn);
+    allBtn.onclick = () => filterByCategory(null, allBtn);
     container.appendChild(allBtn);
 
-    // Кнопка для каждой категории
     res.data.forEach(function (category) {
-        const btn      = document.createElement("button");
-        btn.className  = "category-btn";
-        btn.textContent= category.name;
-        btn.onclick    = () => filterByCategory(category.id, btn);
+        const btn = document.createElement("button");
+        btn.className = "category-btn";
+        btn.textContent = category.name;
+        btn.onclick = () => filterByCategory(category.id, btn);
         container.appendChild(btn);
     });
 }
 
-// Вызывается при клике на кнопку категории
 function filterByCategory(categoryId, clickedBtn) {
     activeCategoryId = categoryId;
+    currentPage = 1;
 
-    // Снимаем active со всех кнопок, ставим на нажатую
     document.querySelectorAll(".category-btn").forEach(btn => {
         btn.classList.remove("active");
     });
+
     clickedBtn.classList.add("active");
 
-    // Загружаем товары этой категории
     loadProducts(categoryId);
 }
 
 /* ─── ТОВАРЫ ────────────────────────────────── */
 
 async function loadProducts(categoryId = null) {
-    const grid     = document.getElementById("products");
-    const empty    = document.getElementById("catalog-empty");
-    const countEl  = document.getElementById("catalog-count");
+    const grid = document.getElementById("products");
+    const empty = document.getElementById("catalog-empty");
+    const countEl = document.getElementById("catalog-count");
 
     if (!grid) return;
 
-    // Показываем скелетоны пока грузим
     grid.innerHTML = `
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
     `;
+
     if (empty) empty.style.display = "none";
 
-    // Формируем URL — с фильтром по категории или без
     const url = categoryId
         ? `/api/products/list.php?category_id=${categoryId}`
         : `/api/products/list.php`;
 
     const res = await apiGet(url);
 
-    // Убираем скелетоны
     grid.innerHTML = "";
 
     if (!res.success) {
@@ -91,32 +93,131 @@ async function loadProducts(categoryId = null) {
         return;
     }
 
-    const products = res.data;
+    allProducts = res.data;
+    currentPage = 1;
 
-    // Обновляем счётчик товаров
     if (countEl) {
-        countEl.textContent = products.length > 0
-            ? products.length + " товаров"
+        countEl.textContent = allProducts.length > 0
+            ? allProducts.length + " товаров"
             : "";
     }
 
-    // Если товаров нет — показываем заглушку
-    if (products.length === 0) {
+    if (allProducts.length === 0) {
         if (empty) empty.style.display = "block";
+        renderPagination();
         return;
     }
 
-    // Рендерим карточки
-    products.forEach(function (product) {
+    renderProductsPage();
+    renderPagination();
+}
+
+/* ─── РЕНДЕР ТОВАРОВ ПО СТРАНИЦАМ ───────────── */
+
+function renderProductsPage() {
+    const grid = document.getElementById("products");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    const end = start + PRODUCTS_PER_PAGE;
+
+    const productsForPage = allProducts.slice(start, end);
+
+    productsForPage.forEach(function (product) {
         grid.innerHTML += renderProductCard(product);
     });
 }
 
+/* ─── ПАГИНАЦИЯ ─────────────────────────────── */
+
+function renderPagination() {
+    let pagination = document.getElementById("pagination");
+
+    const grid = document.getElementById("products");
+    if (!grid) return;
+
+    if (!pagination) {
+        pagination = document.createElement("div");
+        pagination.id = "pagination";
+        pagination.className = "pagination";
+        grid.insertAdjacentElement("afterend", pagination);
+    }
+
+    pagination.innerHTML = "";
+
+    const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
+
+    if (totalPages <= 1) {
+        pagination.style.display = "none";
+        return;
+    }
+
+    pagination.style.display = "flex";
+
+    const prevBtn = document.createElement("button");
+    prevBtn.className = "pagination__btn";
+    prevBtn.textContent = "←";
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = function () {
+        if (currentPage > 1) {
+            currentPage--;
+            renderProductsPage();
+            renderPagination();
+            scrollToCatalogTop();
+        }
+    };
+    pagination.appendChild(prevBtn);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.className = "pagination__btn";
+
+        if (i === currentPage) {
+            btn.classList.add("pagination__btn--active");
+        }
+
+        btn.textContent = i;
+
+        btn.onclick = function () {
+            currentPage = i;
+            renderProductsPage();
+            renderPagination();
+            scrollToCatalogTop();
+        };
+
+        pagination.appendChild(btn);
+    }
+
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "pagination__btn";
+    nextBtn.textContent = "→";
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = function () {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderProductsPage();
+            renderPagination();
+            scrollToCatalogTop();
+        }
+    };
+    pagination.appendChild(nextBtn);
+}
+
+function scrollToCatalogTop() {
+    const catalog = document.getElementById("catalog");
+    if (catalog) {
+        catalog.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+}
+
 /* ─── КАРТОЧКА ТОВАРА ───────────────────────── */
 
-// Возвращает HTML одной карточки
 function renderProductCard(product) {
-    // Картинка или заглушка
     const imgHtml = product.image
         ? `<img src="${getImageUrl(product.image)}" alt="${product.name}" loading="lazy">`
         : `<div class="product-card__no-img">📦</div>`;
@@ -151,29 +252,27 @@ function renderProductCard(product) {
 /* ─── ДОБАВИТЬ В КОРЗИНУ ────────────────────── */
 
 async function addToCart(productId, btn) {
-    // Если пользователь не авторизован — открываем модалку входа
     if (!currentUser) {
         openModal();
         showToast("Войдите чтобы добавить товар в корзину", "info");
         return;
     }
 
-    // Блокируем кнопку чтобы не добавить несколько раз
-    const originalText  = btn.textContent;
-    btn.disabled        = true;
-    btn.textContent     = "...";
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "...";
 
     const res = await apiPost("/api/cart/add.php", {
         product_id: productId,
-        quantity:   1
+        quantity: 1
     });
 
-    btn.disabled    = false;
+    btn.disabled = false;
     btn.textContent = originalText;
 
     if (res.success) {
         showToast("Товар добавлен в корзину", "success");
-        updateCartCount(); // обновляем счётчик в шапке
+        updateCartCount();
     } else {
         showToast(res.message || "Ошибка", "error");
     }
